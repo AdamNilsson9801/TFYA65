@@ -1,46 +1,46 @@
 # Ignore Unity project folders inside LjudProject
-Unity/LjudProject/[Ll]ibrary/
-Unity/LjudProject/[Tt]emp/
-Unity/LjudProject/[Oo]bj/
-Unity/LjudProject/[Bb]uild/
-Unity/LjudProject/[Bb]uilds/
-Unity/LjudProject/[Ll]ogs/
-Unity/LjudProject/[Uu]ser[Ss]ettings/
+UnityProject/LjudProject_TFYA65/[Ll]ibrary/
+UnityProject/LjudProject_TFYA65/[Tt]emp/
+UnityProject/LjudProject_TFYA65/[Oo]bj/
+UnityProject/LjudProject_TFYA65/[Bb]uild/
+UnityProject/LjudProject_TFYA65/[Bb]uilds/
+UnityProject/LjudProject_TFYA65/[Ll]ogs/
+UnityProject/LjudProject_TFYA65/[Uu]ser[Ss]ettings/
 
 # Ignore MemoryCaptures and Recordings inside LjudProject
-Unity/LjudProject/[Mm]emoryCaptures/
-Unity/LjudProject/[Rr]ecordings/
+UnityProject/LjudProject_TFYA65/[Mm]emoryCaptures/
+UnityProject/LjudProject_TFYA65/[Rr]ecordings/
 
 # Visual Studio cache directory
-Unity/LjudProject/.vs/
+UnityProject/LjudProject_TFYA65/.vs/
 
 # Gradle cache directory
-Unity/LjudProject/.gradle/
+UnityProject/LjudProject_TFYA65/.gradle/
 
 # Ignore solution and project files in LjudProject
-Unity/LjudProject/*.csproj
-Unity/LjudProject/*.sln
-Unity/LjudProject/*.unityproj
-Unity/LjudProject/*.suo
-Unity/LjudProject/*.tmp
-Unity/LjudProject/*.user
-Unity/LjudProject/*.userprefs
-Unity/LjudProject/*.pidb
-Unity/LjudProject/*.booproj
-Unity/LjudProject/*.svd
-Unity/LjudProject/*.pdb
-Unity/LjudProject/*.mdb
-Unity/LjudProject/*.opendb
-Unity/LjudProject/*.VC.db
+UnityProject/LjudProject_TFYA65/*.csproj
+UnityProject/LjudProject_TFYA65/*.sln
+UnityProject/LjudProject_TFYA65/*.unityproj
+UnityProject/LjudProject_TFYA65/*.suo
+UnityProject/LjudProject_TFYA65/*.tmp
+UnityProject/LjudProject_TFYA65/*.user
+UnityProject/LjudProject_TFYA65/*.userprefs
+UnityProject/LjudProject_TFYA65/*.pidb
+UnityProject/LjudProject_TFYA65/*.booproj
+UnityProject/LjudProject_TFYA65/*.svd
+UnityProject/LjudProject_TFYA65/*.pdb
+UnityProject/LjudProject_TFYA65/*.mdb
+UnityProject/LjudProject_TFYA65/*.opendb
+UnityProject/LjudProject_TFYA65/*.VC.db
 
 # Ignore Unity meta files and crash reports
-Unity/LjudProject/*.pidb.meta
-Unity/LjudProject/*.pdb.meta
-Unity/LjudProject/*.mdb.meta
-Unity/LjudProject/sysinfo.txt
+UnityProject/LjudProject_TFYA65/*.pidb.meta
+UnityProject/LjudProject_TFYA65/*.pdb.meta
+UnityProject/LjudProject_TFYA65/*.mdb.meta
+UnityProject/LjudProject_TFYA65/sysinfo.txt
 
 # Ignore builds and crashlytics
-Unity/LjudProject/*.apk
-Unity/LjudProject/*.aab
-Unity/LjudProject/*.unitypackage
-Unity/LjudProject/crashlytics-build.properties
+UnityProject/LjudProject_TFYA65/*.apk
+UnityProject/LjudProject_TFYA65/*.aab
+UnityProject/LjudProject_TFYA65/*.unitypackage
+UnityProject/LjudProject_TFYA65/crashlytics-build.properties
