@@ -22,7 +22,7 @@ public class MoveGround : MonoBehaviour
         if (OutOfSight())
         {
             //Change pos to => infront
-            Destroy(gameObject);
+            Debug.Log("OUT_OF_SIGHT");
             //rb.position = startPos;
 
         }
