@@ -16,24 +16,22 @@ public class InfiniteTerrain : MonoBehaviour
     void Start()
     {
         xLength = ground.GetComponent<Renderer>().bounds.size.x;
-        Debug.Log(xLength);
+        //Debug.Log(xLength);
 
         //Create groundList
         for (int i = 0; i < groundSectionAmount; ++i)
         {
-            //Create instance of the ground section
-            GameObject groundInstance = Instantiate(ground);
+            //Create instance of the ground section and set start position
+            GameObject groundInstance = Instantiate(ground, new Vector3(i * xLength, 0, 0), Quaternion.Euler(-90, 0, 0));
 
-            //Set start pos and vel
-            groundInstance.GetComponent<Rigidbody>().position = new Vector3(i * xLength, 0, 0);
-            groundInstance.GetComponent<Rigidbody>().velocity = Vector3.left * -groundSpeed;
+            //Set velocity
+            groundInstance.GetComponent<Rigidbody>().velocity = Vector3.right * -groundSpeed;
 
             //Add to list
             groundList.Add(groundInstance);
         }
 
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -42,7 +40,6 @@ public class InfiniteTerrain : MonoBehaviour
             if (groundList[i].GetComponent<MoveGround>().OutOfSight())
             {
                 //Get last ground section
-                Debug.Log( (i - 1 + groundSectionAmount) % groundSectionAmount);
                 GameObject lastGroundSection = groundList[(i - 1 + groundSectionAmount) % groundSectionAmount];
 
                 //Set new position
