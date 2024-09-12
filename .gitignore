@@ -1,46 +1,41 @@
-# Ignore Unity project folders inside LjudProject
-UnityProject/LjudProject_TFYA65/[Ll]ibrary/
-UnityProject/LjudProject_TFYA65/[Tt]emp/
-UnityProject/LjudProject_TFYA65/[Oo]bj/
+###
+# Unity folders and files
+###
+UnityProject/LjudProject_TFYA65/[Aa]ssets/AssetStoreTools*
 UnityProject/LjudProject_TFYA65/[Bb]uild/
-UnityProject/LjudProject_TFYA65/[Bb]uilds/
-UnityProject/LjudProject_TFYA65/[Ll]ogs/
-UnityProject/LjudProject_TFYA65/[Uu]ser[Ss]ettings/
+UnityProject/LjudProject_TFYA65/[Ll]ibrary/
+UnityProject/LjudProject_TFYA65/[Ll]ocal[Cc]ache/
+UnityProject/LjudProject_TFYA65/[Oo]bj/
+UnityProject/LjudProject_TFYA65/[Tt]emp/
+UnityProject/LjudProject_TFYA65/[Uu]nityGenerated/
+# file on crash reports
+sysinfo.txt
+# Unity3D generated meta files
+*.pidb.meta
 
-# Ignore MemoryCaptures and Recordings inside LjudProject
-UnityProject/LjudProject_TFYA65/[Mm]emoryCaptures/
-UnityProject/LjudProject_TFYA65/[Rr]ecordings/
+###
+# VS/MD solution and project files
+###
+UnityProject/LjudProject_TFYA65/[Ee]xportedObj/
+*.booproj
+*.csproj
+*.sln
+*.suo
+*.svd
+*.unityproj
+*.user
+*.userprefs
+*.pidb
+.DS_Store
 
-# Visual Studio cache directory
-UnityProject/LjudProject_TFYA65/.vs/
-
-# Gradle cache directory
-UnityProject/LjudProject_TFYA65/.gradle/
-
-# Ignore solution and project files in LjudProject
-UnityProject/LjudProject_TFYA65/*.csproj
-UnityProject/LjudProject_TFYA65/*.sln
-UnityProject/LjudProject_TFYA65/*.unityproj
-UnityProject/LjudProject_TFYA65/*.suo
-UnityProject/LjudProject_TFYA65/*.tmp
-UnityProject/LjudProject_TFYA65/*.user
-UnityProject/LjudProject_TFYA65/*.userprefs
-UnityProject/LjudProject_TFYA65/*.pidb
-UnityProject/LjudProject_TFYA65/*.booproj
-UnityProject/LjudProject_TFYA65/*.svd
-UnityProject/LjudProject_TFYA65/*.pdb
-UnityProject/LjudProject_TFYA65/*.mdb
-UnityProject/LjudProject_TFYA65/*.opendb
-UnityProject/LjudProject_TFYA65/*.VC.db
-
-# Ignore Unity meta files and crash reports
-UnityProject/LjudProject_TFYA65/*.pidb.meta
-UnityProject/LjudProject_TFYA65/*.pdb.meta
-UnityProject/LjudProject_TFYA65/*.mdb.meta
-UnityProject/LjudProject_TFYA65/sysinfo.txt
-
-# Ignore builds and crashlytics
-UnityProject/LjudProject_TFYA65/*.apk
-UnityProject/LjudProject_TFYA65/*.aab
-UnityProject/LjudProject_TFYA65/*.unitypackage
-UnityProject/LjudProject_TFYA65/crashlytics-build.properties
+###
+# OS generated
+###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
