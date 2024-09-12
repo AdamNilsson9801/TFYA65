@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Controlls : MonoBehaviour
 {
+    public GameObject ground;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +21,8 @@ public class Controlls : MonoBehaviour
     {
         if (other.gameObject.CompareTag("GroundSectionTrigger"))
         {
-            Debug.Log("Is Triggered");
+            //Debug.Log("Is Triggered");
+
         }
     }
 }

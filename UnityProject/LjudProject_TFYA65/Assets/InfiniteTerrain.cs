@@ -35,21 +35,34 @@ public class InfiniteTerrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for(int i = 0; i < groundSectionAmount; i++)
-        {
-            if (groundList[i].GetComponent<MoveGround>().OutOfSight())
-            {
-                //Get last ground section
-                GameObject lastGroundSection = groundList[(i - 1 + groundSectionAmount) % groundSectionAmount];
+        //for(int i = 0; i < groundSectionAmount; i++)
+        //{
+        //    if (groundList[i].GetComponent<MoveGround>().OutOfSight())
+        //    {
+        //        //Get last ground section
+        //        GameObject lastGroundSection = groundList[(i - 1 + groundSectionAmount) % groundSectionAmount];
 
-                //Set new position
-                groundList[i].GetComponent<Rigidbody>().position = lastGroundSection.transform.position + new Vector3(xLength, 0, 0);
+        //        //Set new position
+        //        groundList[i].GetComponent<Rigidbody>().position = lastGroundSection.transform.position + new Vector3(xLength, 0, 0);
 
 
-            }
+        //    }
 
-            //else do nothing
-        }
+        //    //else do nothing
+        //}
     }
 
+    public void UpdatePosition(GameObject obj)
+    {
+        int index = groundList.IndexOf(obj);
+
+        if(index != -1)
+        {
+            //Get last ground section
+            GameObject lastGroundSection = groundList[(index - 1 + groundSectionAmount) % groundSectionAmount];
+
+            //Set new position
+            groundList[index].GetComponent<Rigidbody>().position = lastGroundSection.transform.position + new Vector3(xLength, 0, 0);
+        }
+    }
 }
