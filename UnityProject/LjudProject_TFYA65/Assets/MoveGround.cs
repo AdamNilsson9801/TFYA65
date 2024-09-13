@@ -10,19 +10,14 @@ public class MoveGround : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startPos = transform.position;
-        rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = transform.right * -speedFactor;
+        //rb.velocity = transform.right * -speedFactor;
+        transform.position += new Vector3(-GlobalSpeed.speed, 0 ,0) * Time.deltaTime;
 
-    }
-
-    public bool OutOfSight() //Look if ground is behind camera
-    {
-        return (transform.position.x < -100f);
     }
 }
