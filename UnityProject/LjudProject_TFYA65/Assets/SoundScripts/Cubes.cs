@@ -33,4 +33,9 @@ public class Cubes : MonoBehaviour
             }
         }
     }
+
+    public void ChangeColor()
+    {
+        GetComponent<Renderer>().material.color = Color.red;    
+    }
 }

@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 7
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1001 &302414858
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -172,7 +172,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3046.1
+      value: 739.90015
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -259,7 +259,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3005.1
+      value: 698.90015
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 5
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1001 &461812517
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -367,7 +367,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2940.3
+      value: 634.1001
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -454,7 +454,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3025.2
+      value: 719
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -530,7 +530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 4
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1 &1226108391 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 11957801208898938, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
@@ -551,7 +551,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 0
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1 &1410952643
 GameObject:
   m_ObjectHideFlags: 0
@@ -827,7 +827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 1
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1001 &1463153340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -859,7 +859,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2963.3
+      value: 657.1001
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -946,7 +946,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3086.6
+      value: 780.40015
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -9229,6 +9229,10 @@ MonoBehaviour:
   audioClip: {fileID: 8300000, guid: ace0b2784a254414a88aa5e0ae54d8c6, type: 3}
   useMicrophone: 0
   selectedDevice: 
+  mixerGroupMicrophone: {fileID: -6023011375341617437, guid: 08216f56bcd64064e988d2b886f69fa9,
+    type: 2}
+  mixerGroupMaster: {fileID: 24300002, guid: 08216f56bcd64064e988d2b886f69fa9, type: 2}
+  harmonics: 5
 --- !u!82 &1616177596
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9239,11 +9243,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ace0b2784a254414a88aa5e0ae54d8c6, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -9375,7 +9379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 6
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1001 &1675680455
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9407,7 +9411,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3065
+      value: 758.80005
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
@@ -9483,7 +9487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 2
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1 &1801149033 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 11957801208898938, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
@@ -9504,7 +9508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   band: 3
   startScale: 1
-  scaleMult: 10
+  scaleMult: 100
 --- !u!1001 &1995585092
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9536,7 +9540,7 @@ PrefabInstance:
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2984.9
+      value: 678.69995
       objectReference: {fileID: 0}
     - target: {fileID: 1647391385712723494, guid: 5c3e6a764ef1b124a9dc18c89ba12d12,
         type: 3}

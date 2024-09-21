@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -8,6 +9,7 @@ public class SoundControll : MonoBehaviour
     AudioSource audioSource;
 
     public static float[] samples = new float[1024]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public static float[] samplesTimeDomain = new float[64]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
 
@@ -16,10 +18,13 @@ public class SoundControll : MonoBehaviour
     public string selectedDevice;
     public AudioMixerGroup mixerGroupMicrophone, mixerGroupMaster;
 
+    [Range(0f, 100f)]
+    public float loudnessThreshold;
+    public int sampleWindow = 64;
+
     //Harmonic Product Spectrum (HPS)
     public int harmonics = 5;
-    private float timeCounter = 0f; // Time counter for detecting every 2 seconds
-    private float detectionInterval = 0.5f; // 2 seconds interval
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,23 +41,16 @@ public class SoundControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-        //Extract the first 1024 samples
-        //Array.Copy(totalRange, 0, samples, 0, samples.Length);
+        //Debug.Log(GetLoudness());
 
         //Detect pitch
-
-        // Accumulate time since last update
-        timeCounter += Time.deltaTime;
-
-        // Check if 2 seconds have passed
-        if (timeCounter >= detectionInterval)
+        if (GetLoudness() > loudnessThreshold)
         {
-            // Reset the timer
-            timeCounter = 0f;
             GetSpectrumAudioSource();
             MakeFrequencyBands();
+
+            //    //Extract the first 1024 samples
+            //    // Array.Copy(totalRange, 0, samples, 0, samples.Length);
 
             float detectedpitch = DetectPitch(samples);
             Debug.Log(detectedpitch);
@@ -89,7 +87,7 @@ public class SoundControll : MonoBehaviour
             }
         }
 
-        float freq = maxIndex * AudioSettings.outputSampleRate / (2 * samples.Length);
+        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
 
         return freq;
     }
@@ -98,6 +96,7 @@ public class SoundControll : MonoBehaviour
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
     }
+
     void MakeFrequencyBands()
     {
         int count = 0;
@@ -149,4 +148,21 @@ public class SoundControll : MonoBehaviour
     }
 
 
+    float GetLoudness()
+    {
+        int startPos = Microphone.GetPosition(Microphone.devices[0]) - sampleWindow;
+
+        if (startPos < 0) startPos = 0;
+
+
+        audioSource.clip.GetData(samplesTimeDomain, startPos);
+
+        float totalLoudness = 0;
+        for(int i = 0; i < sampleWindow; i++)
+        {
+            totalLoudness += Mathf.Abs(samplesTimeDomain[i]);
+        }
+
+        return (totalLoudness/sampleWindow) * 1000;
+    }
 }
