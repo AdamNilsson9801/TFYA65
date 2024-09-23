@@ -9227,11 +9227,13 @@ MonoBehaviour:
   - 0
   - 0
   audioClip: {fileID: 8300000, guid: ace0b2784a254414a88aa5e0ae54d8c6, type: 3}
-  useMicrophone: 0
+  useMicrophone: 1
   selectedDevice: 
   mixerGroupMicrophone: {fileID: -6023011375341617437, guid: 08216f56bcd64064e988d2b886f69fa9,
     type: 2}
   mixerGroupMaster: {fileID: 24300002, guid: 08216f56bcd64064e988d2b886f69fa9, type: 2}
+  loudnessThreshold: 6
+  sampleWindow: 64
   harmonics: 5
 --- !u!82 &1616177596
 AudioSource:
