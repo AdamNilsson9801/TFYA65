@@ -53,7 +53,7 @@ public class SoundControll : MonoBehaviour
             //    // Array.Copy(totalRange, 0, samples, 0, samples.Length);
 
             float detectedpitch = DetectPitch(samples);
-            Debug.Log(detectedpitch);
+            Debug.Log("DETECTED PITCH: " +  Mathf.Round(detectedpitch) + "Hz");
         }
     }
 
@@ -67,11 +67,11 @@ public class SoundControll : MonoBehaviour
             hps[i] = spectrum[i];
         }
 
-        for (int h = 2; h <= harmonics; h++)
+        for (int h = 1; h <= harmonics; h++)
         {
             for (int i = 0; i < length / h; i++)
             {
-                hps[i] = spectrum[i * h];
+                hps[i] += spectrum[i * h];
             }
         }
 
