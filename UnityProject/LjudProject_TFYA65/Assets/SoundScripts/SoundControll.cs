@@ -44,7 +44,7 @@ public class SoundControll : MonoBehaviour
         //Debug.Log(GetLoudness());
 
         //Detect pitch
-        if (GetLoudness() > loudnessThreshold)
+        if (GetLoudness() >= loudnessThreshold)
         {
             GetSpectrumAudioSource();
             MakeFrequencyBands();
@@ -71,7 +71,7 @@ public class SoundControll : MonoBehaviour
         {
             for (int i = 0; i < length / h; i++)
             {
-                hps[i] *= spectrum[i * h];
+                hps[i] = spectrum[i * h];
             }
         }
 
@@ -163,6 +163,6 @@ public class SoundControll : MonoBehaviour
             totalLoudness += Mathf.Abs(samplesTimeDomain[i]);
         }
 
-        return (totalLoudness/sampleWindow) * 1000;
+        return Mathf.Round((totalLoudness/sampleWindow) * 1000);
     }
 }
