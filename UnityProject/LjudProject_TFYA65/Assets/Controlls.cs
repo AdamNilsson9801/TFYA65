@@ -102,4 +102,32 @@ public class Controlls : MonoBehaviour
         }
         return false;
     }
+
+    public void ChangeLane(float freq)
+    {
+        if(freq < 200) //Turn left
+        {
+            int currentLane = lanePos;
+
+            if (isMovePossible(currentLane, currentLane - 1))
+            {
+                targetPos = lanePositions.transform.GetChild(currentLane - 1).position;
+                isMoving = true;
+                lanePos = currentLane - 1;
+            }
+
+        }
+        else //Turn right
+        {
+            int currentLane = lanePos;
+
+            if (isMovePossible(currentLane, currentLane + 1))
+            {
+                targetPos = lanePositions.transform.GetChild(currentLane + 1).position;
+                isMoving = true;
+                lanePos = currentLane + 1;
+            }
+
+        }
+    }
 }

@@ -6,10 +6,11 @@ using UnityEngine.Audio;
 [RequireComponent(typeof(AudioSource))]
 public class SoundControll : MonoBehaviour
 {
+    public GameObject car;
     AudioSource audioSource;
 
-    public static float[] samples = new float[1024]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
-    public static float[] samplesTimeDomain = new float[64]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public static float[] samplesTimeDomain = new float[64];
     public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
 
@@ -26,9 +27,15 @@ public class SoundControll : MonoBehaviour
     public int harmonics = 5;
 
 
+    private float[] sampleBuffer = new float[4096];
+    private int frameCounter = 0;
+    private int frameAmount = 30;
     // Start is called before the first frame update
     void Start()
     {
+
+        //Debug.Log(sampleBuffer[0]);
+
         //Get audioSource
         audioSource = GetComponent<AudioSource>();
 
@@ -41,19 +48,39 @@ public class SoundControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(GetLoudness());
 
         //Detect pitch
-        if (GetLoudness() >= loudnessThreshold)
+        if (GetLoudness() > loudnessThreshold )
         {
-            GetSpectrumAudioSource();
-            MakeFrequencyBands();
+            if (frameCounter < frameAmount)
+            {
+                GetSpectrumAudioSource();
 
-            //    //Extract the first 1024 samples
-            //    // Array.Copy(totalRange, 0, samples, 0, samples.Length);
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    sampleBuffer[i] += samples[i];
+                }
 
-            float detectedpitch = DetectPitch(samples);
-            Debug.Log("DETECTED PITCH: " +  Mathf.Round(detectedpitch) + "Hz");
+                frameCounter++;
+                Array.Clear(samples, 0, samples.Length);
+            }
+
+
+            if (frameCounter == frameAmount)
+            {
+                for (int i = 0; i < sampleBuffer.Length; i++)
+                {
+                    sampleBuffer[i] /= (float)frameAmount;
+                }
+
+                float detectedpitch = DetectPitch(sampleBuffer);
+                Debug.Log("DETECTED PITCH: " + Mathf.Round(detectedpitch) + "Hz");
+                frameCounter = 0;
+                Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
+
+                car.GetComponent<Controlls>().ChangeLane(detectedpitch);
+            }
+
         }
     }
 
@@ -71,7 +98,7 @@ public class SoundControll : MonoBehaviour
         {
             for (int i = 0; i < length / h; i++)
             {
-                hps[i] += spectrum[i * h];
+                hps[i] *= spectrum[i * h];
             }
         }
 
@@ -97,31 +124,6 @@ public class SoundControll : MonoBehaviour
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
     }
 
-    void MakeFrequencyBands()
-    {
-        int count = 0;
-
-        for (int i = 0; i < freqBand.Length; i++)
-        {
-            float avg = 0;
-            int sampleCount = (int)Mathf.Pow(2, i) * 2;
-
-            if (i == 7)
-            {
-                sampleCount += 2;
-            }
-
-            for (int j = 0; j < sampleCount; j++)
-            {
-                avg += samples[count] * (count + 1);
-                count++;
-            }
-
-            avg /= count;
-            freqBand[i] = avg * 10;
-
-        }
-    }
 
     void SetAudioClip()
     {
@@ -158,11 +160,11 @@ public class SoundControll : MonoBehaviour
         audioSource.clip.GetData(samplesTimeDomain, startPos);
 
         float totalLoudness = 0;
-        for(int i = 0; i < sampleWindow; i++)
+        for (int i = 0; i < sampleWindow; i++)
         {
             totalLoudness += Mathf.Abs(samplesTimeDomain[i]);
         }
 
-        return Mathf.Round((totalLoudness/sampleWindow) * 1000);
+        return Mathf.Round((totalLoudness / sampleWindow) * 1000);
     }
 }

@@ -14,13 +14,13 @@ public class SpawnObstacles : MonoBehaviour
         //GameObject spawnRow1 = transform.GetChild(1).gameObject;
 
         //Get SpawnRow2
-        GameObject spawnRow2 = transform.GetChild(2).gameObject;
+        //GameObject spawnRow2 = transform.GetChild(2).gameObject;
 
 
         //Spawn obstacle(s) in row 1
         //spawnRow1.GetComponent<SpawnObstaclesInRow>().SpawnInRow();
         
         //Spawn obstacle(s) in row 2
-        spawnRow2.GetComponent<SpawnObstaclesInRow>().SpawnInRow();
+        //spawnRow2.GetComponent<SpawnObstaclesInRow>().SpawnInRow();
     }
 }
