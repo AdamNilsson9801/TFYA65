@@ -22,6 +22,7 @@ public class SoundControll : MonoBehaviour
     [Range(0f, 100f)]
     public float loudnessThreshold;
     public int sampleWindow = 64;
+    public bool useHPS = true;
 
     //Harmonic Product Spectrum (HPS)
     public int harmonics = 5;
@@ -29,13 +30,12 @@ public class SoundControll : MonoBehaviour
 
     private float[] sampleBuffer = new float[4096];
     private int frameCounter = 0;
-    private int frameAmount = 30;
+    private int frameAmount = 15;
+    //private bool isMoving = false;
+
     // Start is called before the first frame update
     void Start()
     {
-
-        //Debug.Log(sampleBuffer[0]);
-
         //Get audioSource
         audioSource = GetComponent<AudioSource>();
 
@@ -48,21 +48,21 @@ public class SoundControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        // vi måste nollställa framecounter om getloudness blir lägre än loudnessThreshold
         //Detect pitch
-        if (GetLoudness() > loudnessThreshold )
+        if (GetLoudness() > loudnessThreshold)
         {
-            if (frameCounter < frameAmount)
+            if (frameCounter < frameAmount) //Do this 15 frames
             {
                 GetSpectrumAudioSource();
 
-                for (int i = 0; i < samples.Length; i++)
+                for (int i = 0; i < samples.Length; i++) //Store values in buffer
                 {
                     sampleBuffer[i] += samples[i];
                 }
 
                 frameCounter++;
-                Array.Clear(samples, 0, samples.Length);
+                Array.Clear(samples, 0, samples.Length); //Clear samples array
             }
 
 
@@ -78,45 +78,29 @@ public class SoundControll : MonoBehaviour
                 frameCounter = 0;
                 Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
 
+
                 car.GetComponent<Controlls>().ChangeLane(detectedpitch);
             }
+        }
+        else
+        {
 
+            frameCounter = 0;
+            Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
         }
     }
 
     private float DetectPitch(float[] spectrum)
     {
-        int length = spectrum.Length;
-        float[] hps = new float[length];
-
-        for (int i = 0; i < length; i++)
+        if (useHPS)
         {
-            hps[i] = spectrum[i];
+            return HPS(spectrum);
+        }
+        else
+        {
+            return 0f;
         }
 
-        for (int h = 1; h <= harmonics; h++)
-        {
-            for (int i = 0; i < length / h; i++)
-            {
-                hps[i] *= spectrum[i * h];
-            }
-        }
-
-        float maxVal = 0f;
-        int maxIndex = 0;
-
-        for (int i = 0; i < length; i++)
-        {
-            if (hps[i] > maxVal)
-            {
-                maxVal = hps[i];
-                maxIndex = i;
-            }
-        }
-
-        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
-
-        return freq;
     }
 
     void GetSpectrumAudioSource()
@@ -147,6 +131,41 @@ public class SoundControll : MonoBehaviour
             audioSource.outputAudioMixerGroup = mixerGroupMaster;
             audioSource.loop = true;
         }
+    }
+
+    float HPS(float[] spectrum)
+    {
+        int length = spectrum.Length;
+        float[] hps = new float[length];
+
+        for (int i = 0; i < length; i++)
+        {
+            hps[i] = spectrum[i];
+        }
+
+        for (int h = 1; h <= harmonics; h++)
+        {
+            for (int i = 0; i < length / h; i++)
+            {
+                hps[i] += spectrum[i * h];
+            }
+        }
+
+        float maxVal = 0f;
+        int maxIndex = 0;
+
+        for (int i = 0; i < length; i++)
+        {
+            if (hps[i] > maxVal)
+            {
+                maxVal = hps[i];
+                maxIndex = i;
+            }
+        }
+
+        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
+
+        return freq;
     }
 
 

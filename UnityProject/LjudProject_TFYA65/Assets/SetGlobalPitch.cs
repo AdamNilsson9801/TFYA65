@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 [RequireComponent(typeof(AudioSource))]
 public class SetGloballeftPitch : MonoBehaviour
 {
-    public TextMeshProUGUI leftFreq;
+    public TextMeshProUGUI freq;
     AudioSource audioSource;
     public string selectedDevice;
     public AudioMixerGroup mixerGroupMicrophone;
@@ -16,7 +16,8 @@ public class SetGloballeftPitch : MonoBehaviour
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();       
+        SetAudioClip();
         audioSource.Play();
     }
 
@@ -26,14 +27,23 @@ public class SetGloballeftPitch : MonoBehaviour
     }
     public void SetLeftPitch()
     {
-        //Get microphone
-        SetAudioClip();
 
-        float pitch = GetPitch(samples);
-        GlobalSpeed.leftPitch = Mathf.Round(pitch);
-        leftFreq.text = Mathf.Round(pitch).ToString() + " Hz";
+        if (tag == "highpitchbutton")
+        {
+            freq.text = "180 Hz";
+        }
+        else if(tag == "lowpitchbutton")
+        {
+            freq.text = "120 Hz";
+        }
 
-        audioSource.Stop();
+        ////Get microphone
+        //float pitch = GetPitch(samples);
+        //GlobalSpeed.leftPitch = Mathf.Round(pitch);
+        //leftFreq.text = Mathf.Round(pitch).ToString() + " Hz";
+
+        //audioSource.Stop();
+
     }
 
     float GetPitch(float[] samples)
