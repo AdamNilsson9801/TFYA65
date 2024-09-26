@@ -9,9 +9,9 @@ public class SoundControll : MonoBehaviour
     public GameObject car;
     AudioSource audioSource;
 
-    public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public static float[] samples = new float[2048]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
-    public static float[] freqBand = new float[8];
+    // public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
 
     public AudioClip audioClip;
@@ -27,13 +27,12 @@ public class SoundControll : MonoBehaviour
     public int harmonics = 5;
 
 
-    private float[] sampleBuffer = new float[4096];
+    private float[] sampleBuffer = new float[2048];
     private int frameCounter = 0;
-    private int frameAmount = 30;
+    private int frameAmount = 20;
     // Start is called before the first frame update
     void Start()
     {
-
         //Debug.Log(sampleBuffer[0]);
 
         //Get audioSource
@@ -48,9 +47,9 @@ public class SoundControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        // vi måste nollställa framecounter om getloudness blir lägre än loudnessThreshold
         //Detect pitch
-        if (GetLoudness() > loudnessThreshold )
+        if (GetLoudness() > loudnessThreshold)
         {
             if (frameCounter < frameAmount)
             {
@@ -78,23 +77,37 @@ public class SoundControll : MonoBehaviour
                 frameCounter = 0;
                 Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
 
+
                 car.GetComponent<Controlls>().ChangeLane(detectedpitch);
             }
-
+        }
+        else {
+            frameCounter = 0;
+            Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
         }
     }
 
     private float DetectPitch(float[] spectrum)
     {
+
+        float value = float.MinValue; // Start with the lowest possible value
+        for (int i = 0; i < spectrum.Length; i++)
+        {
+            if (spectrum[i] > value)
+            {
+                value = spectrum[i]; // Update maxVal if a larger value is found
+            }
+        }
+
         int length = spectrum.Length;
         float[] hps = new float[length];
 
         for (int i = 0; i < length; i++)
         {
-            hps[i] = spectrum[i];
+            hps[i] = spectrum[i] / value;
         }
 
-        for (int h = 1; h <= harmonics; h++)
+        for (int h = 2; h <= harmonics; h++)
         {
             for (int i = 0; i < length / h; i++)
             {
@@ -113,15 +126,27 @@ public class SoundControll : MonoBehaviour
                 maxIndex = i;
             }
         }
-
-        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
+        Debug.Log("DETECTED MAXINDEX: " + Mathf.Round(maxIndex));
+        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * sampleBuffer.Length);
 
         return freq;
     }
 
     void GetSpectrumAudioSource()
     {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+        audioSource.GetSpectrumData(samples, 0, FFTWindow.Hamming);
+
+        float cutoffFrequency = 1000f; // Set the cutoff frequency
+        float cutoffFrequency2 = 75f; // Set the cutoff frequency
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            float frequency = i * AudioSettings.outputSampleRate / (2f * samples.Length);
+            if (frequency > cutoffFrequency || frequency < cutoffFrequency2)
+            {
+                samples[i] = 0f; // Zero out values above the cutoff frequency
+            }
+        }
     }
 
 
