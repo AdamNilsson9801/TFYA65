@@ -11,7 +11,7 @@ public class SoundControll : MonoBehaviour
 
     public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
-    public static float[] freqBand = new float[8];
+    //public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
 
     public AudioClip audioClip;
@@ -106,6 +106,18 @@ public class SoundControll : MonoBehaviour
     void GetSpectrumAudioSource()
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+
+        float cutoffFrequency = 1000f; // Set the cutoff frequency
+        float cutoffFrequency2 = 70f; // Set the cutoff frequency
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            float frequency = i * AudioSettings.outputSampleRate / (2f * samples.Length);
+            if (frequency > cutoffFrequency || frequency < cutoffFrequency2)
+            {
+                samples[i] = 0f; // Zero out values above the cutoff frequency
+            }
+        }
     }
 
 
@@ -185,5 +197,11 @@ public class SoundControll : MonoBehaviour
         }
 
         return Mathf.Round((totalLoudness / sampleWindow) * 1000);
+    }
+
+    public float GetPitch()
+    {
+        GetSpectrumAudioSource();
+        return DetectPitch(samples); 
     }
 }

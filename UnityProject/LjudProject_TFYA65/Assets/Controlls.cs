@@ -9,6 +9,7 @@ public class Controlls : MonoBehaviour
     public GameObject lanePositions;
     public float carSpeed = 10f;
     public GameObject GameManager;
+    public float deadSpaceScale = 5f;
 
     private Vector3 targetPos;
     private bool isMoving = false;
@@ -105,8 +106,15 @@ public class Controlls : MonoBehaviour
 
     public void ChangeLane(float freq)
     {
-        if(freq < 200) //Turn left
+            float dist = Mathf.Abs(GlobalSpeed.rightPitch - GlobalSpeed.leftPitch);
+            
+            float lowBar = GlobalSpeed.leftPitch + (dist / 2f) - deadSpaceScale;
+            
+            float highBar = GlobalSpeed.rightPitch - (dist / 2f) + deadSpaceScale;
+
+        if(freq < lowBar) //Turn left
         {
+
             int currentLane = lanePos;
 
             if (isMovePossible(currentLane, currentLane - 1))
@@ -117,7 +125,7 @@ public class Controlls : MonoBehaviour
             }
 
         }
-        else //Turn right
+        else if(freq > highBar)//Turn right
         {
             int currentLane = lanePos;
 
