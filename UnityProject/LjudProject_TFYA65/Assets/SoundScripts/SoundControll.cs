@@ -9,7 +9,7 @@ public class SoundControll : MonoBehaviour
     public GameObject car;
     AudioSource audioSource;
 
-    public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public static float[] samples = new float[2048]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
     //public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
@@ -25,12 +25,13 @@ public class SoundControll : MonoBehaviour
     public bool useHPS = true;
 
     //Harmonic Product Spectrum (HPS)
-    public int harmonics = 5;
+    public int harmonics = 4;
 
 
-    private float[] sampleBuffer = new float[4096];
+    private float[] sampleBuffer = new float[2048];
     private int frameCounter = 0;
-    private int frameAmount = 15;
+    private int frameAmount = 10;
+    //private int frameReset = 60;
     //private bool isMoving = false;
 
     // Start is called before the first frame update
@@ -60,11 +61,9 @@ public class SoundControll : MonoBehaviour
                 {
                     sampleBuffer[i] += samples[i];
                 }
-
                 frameCounter++;
                 Array.Clear(samples, 0, samples.Length); //Clear samples array
             }
-
 
             if (frameCounter == frameAmount)
             {
@@ -78,13 +77,11 @@ public class SoundControll : MonoBehaviour
                 frameCounter = 0;
                 Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
 
-
                 car.GetComponent<Controlls>().ChangeLane(detectedpitch);
             }
         }
         else
         {
-
             frameCounter = 0;
             Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
         }
@@ -107,7 +104,7 @@ public class SoundControll : MonoBehaviour
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
 
-        float cutoffFrequency = 1000f; // Set the cutoff frequency
+        float cutoffFrequency = 5000f; // Set the cutoff frequency
         float cutoffFrequency2 = 70f; // Set the cutoff frequency
 
         for (int i = 0; i < samples.Length; i++)
@@ -119,7 +116,6 @@ public class SoundControll : MonoBehaviour
             }
         }
     }
-
 
     void SetAudioClip()
     {
@@ -155,11 +151,11 @@ public class SoundControll : MonoBehaviour
             hps[i] = spectrum[i];
         }
 
-        for (int h = 1; h <= harmonics; h++)
+        for (int h = 2; h <= harmonics; h++)
         {
-            for (int i = 0; i < length / h; i++)
+            for (int i = 0; i < (length / h); i++)
             {
-                hps[i] += spectrum[i * h];
+                hps[i] *= spectrum[i * h];
             }
         }
 
@@ -174,13 +170,10 @@ public class SoundControll : MonoBehaviour
                 maxIndex = i;
             }
         }
-
         float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
 
         return freq;
     }
-
-
     float GetLoudness()
     {
         int startPos = Microphone.GetPosition(Microphone.devices[0]) - sampleWindow;
@@ -198,7 +191,6 @@ public class SoundControll : MonoBehaviour
 
         return Mathf.Round((totalLoudness / sampleWindow) * 1000);
     }
-
     public float GetPitch()
     {
         GetSpectrumAudioSource();
