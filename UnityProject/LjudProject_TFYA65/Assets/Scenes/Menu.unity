@@ -2924,12 +2924,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044132940}
   m_CullTransparentMesh: 1
---- !u!1 &1331598644 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ff97cb3941fd024a84d52f708e4ff6f,
-    type: 3}
-  m_PrefabInstance: {fileID: 698501167}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1411945366
 GameObject:
   m_ObjectHideFlags: 0
@@ -3171,7 +3165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dcbd49e55d80d3469914336fc486706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  car: {fileID: 1331598644}
+  car: {fileID: 0}
+  text: {fileID: 0}
   totalRange:
   - 0
   - 0

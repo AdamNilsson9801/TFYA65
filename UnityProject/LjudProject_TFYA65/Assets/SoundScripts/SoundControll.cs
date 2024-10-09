@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -8,6 +9,7 @@ public class SoundControll : MonoBehaviour
 {
     public GameObject car;
     AudioSource audioSource;
+    public TextMeshProUGUI text;
 
     public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
@@ -30,7 +32,7 @@ public class SoundControll : MonoBehaviour
 
     private float[] sampleBuffer = new float[4096];
     private int frameCounter = 0;
-    private int frameAmount = 15;
+    private int frameAmount = 20;
     //private bool isMoving = false;
 
     // Start is called before the first frame update
@@ -68,18 +70,25 @@ public class SoundControll : MonoBehaviour
 
             if (frameCounter == frameAmount)
             {
+                //Mean spectrum over 15 frames
                 for (int i = 0; i < sampleBuffer.Length; i++)
                 {
                     sampleBuffer[i] /= (float)frameAmount;
                 }
 
                 float detectedpitch = DetectPitch(sampleBuffer);
-                Debug.Log("DETECTED PITCH: " + Mathf.Round(detectedpitch) + "Hz");
+
+                if (text)
+                {
+                    text.text = Mathf.Round(detectedpitch).ToString() + "Hz";
+                }
                 frameCounter = 0;
                 Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
 
-
-                car.GetComponent<Controlls>().ChangeLane(detectedpitch);
+                if (car)
+                {
+                    car.GetComponent<Controlls>().ChangeLane(detectedpitch);
+                }
             }
         }
         else
@@ -98,9 +107,45 @@ public class SoundControll : MonoBehaviour
         }
         else
         {
-            return 0f;
+            return AutoCorrelation(spectrum);
         }
 
+    }
+
+    private float AutoCorrelation(float[] signal)
+    {
+        int signalLength = signal.Length;
+        float[] autocorr = new float[signalLength];
+
+        // Compute autocorrelation for each lag
+        for (int lag = 0; lag < signalLength; lag++)
+        {
+            float sum = 0f;
+            for (int i = 0; i < signalLength - lag; i++)
+            {
+                sum += signal[i] * signal[i + lag];
+            }
+            autocorr[lag] = sum;
+        }
+
+        // Ignore lag 0, find first significant peak after it
+        int maxIndex = 1; // Start from 1 to avoid the lag 0 peak
+        float maxValue = autocorr[1];
+
+        for (int i = 2; i < signalLength; i++)
+        {
+            if (autocorr[i] > maxValue)
+            {
+                maxValue = autocorr[i];
+                maxIndex = i;
+            }
+        }
+
+        // Convert the index of the peak to frequency
+        float sampleRate = AudioSettings.outputSampleRate;
+        float freq = sampleRate / maxIndex; // maxIndex corresponds to the period
+
+        return freq;
     }
 
     void GetSpectrumAudioSource()
@@ -202,6 +247,6 @@ public class SoundControll : MonoBehaviour
     public float GetPitch()
     {
         GetSpectrumAudioSource();
-        return DetectPitch(samples); 
+        return DetectPitch(samples);
     }
 }

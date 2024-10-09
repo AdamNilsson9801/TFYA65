@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnObstaclesInRow : MonoBehaviour
 {
-    public GameObject obstacle = null;
+    public GameObject obstacle;
     private List<GameObject> obstacles;
     public void Start()
     {

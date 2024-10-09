@@ -28,7 +28,7 @@ public class SetGloballeftPitch : MonoBehaviour
         if (tag == "highpitchbutton")
         {
             float pitch = sc.GetPitch();
-            freq.text = pitch.ToString();
+            freq.text = Mathf.Round(pitch).ToString() + " Hz";
             GlobalSpeed.rightPitch = pitch;
 
             Debug.Log(GlobalSpeed.rightPitch);
@@ -36,7 +36,7 @@ public class SetGloballeftPitch : MonoBehaviour
         else if (tag == "lowpitchbutton")
         {
             float pitch = sc.GetPitch();
-            freq.text = sc.GetPitch().ToString();
+            freq.text = Mathf.Round(pitch).ToString() + " Hz";
             GlobalSpeed.leftPitch = pitch;
 
             Debug.Log(GlobalSpeed.leftPitch);

@@ -1028,11 +1028,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616177594}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dcbd49e55d80d3469914336fc486706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  car: {fileID: 0}
+  text: {fileID: 0}
   totalRange:
   - 0
   - 0
@@ -9234,6 +9236,7 @@ MonoBehaviour:
   mixerGroupMaster: {fileID: 24300002, guid: 08216f56bcd64064e988d2b886f69fa9, type: 2}
   loudnessThreshold: 4
   sampleWindow: 64
+  useHPS: 1
   harmonics: 5
 --- !u!82 &1616177596
 AudioSource:
@@ -9242,7 +9245,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616177594}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -9353,7 +9356,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616177594}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2955be475c84794c9faee18b5909b1c, type: 3}
   m_Name: 
