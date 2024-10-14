@@ -5,7 +5,7 @@ public class SpawnObstacles : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Spawn();
+        //Spawn();
     }
 
     public void Spawn()

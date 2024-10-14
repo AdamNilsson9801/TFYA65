@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class SoundControll : MonoBehaviour
     AudioSource audioSource;
     public TextMeshProUGUI text;
 
-    public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public static float[] samples = new float[2048]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
     //public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
@@ -27,10 +28,10 @@ public class SoundControll : MonoBehaviour
     public bool useHPS = true;
 
     //Harmonic Product Spectrum (HPS)
-    public int harmonics = 5;
+    public int harmonics = 3;
 
 
-    private float[] sampleBuffer = new float[4096];
+    private float[] sampleBuffer = new float[2048];
     private int frameCounter = 0;
     private int frameAmount = 20;
     //private bool isMoving = false;
@@ -73,9 +74,9 @@ public class SoundControll : MonoBehaviour
                 //Mean spectrum over 15 frames
                 for (int i = 0; i < sampleBuffer.Length; i++)
                 {
-                    sampleBuffer[i] /= (float)frameAmount;
+                    sampleBuffer[i] /= (float)frameAmount; 
+                    //Debug.Log(sampleBuffer[i] + " sampleBuffer");
                 }
-
                 float detectedpitch = DetectPitch(sampleBuffer);
 
                 if (text)
@@ -101,59 +102,15 @@ public class SoundControll : MonoBehaviour
 
     private float DetectPitch(float[] spectrum)
     {
-        if (useHPS)
-        {
-            return HPS(spectrum);
-        }
-        else
-        {
-            return AutoCorrelation(spectrum);
-        }
-
-    }
-
-    private float AutoCorrelation(float[] signal)
-    {
-        int signalLength = signal.Length;
-        float[] autocorr = new float[signalLength];
-
-        // Compute autocorrelation for each lag
-        for (int lag = 0; lag < signalLength; lag++)
-        {
-            float sum = 0f;
-            for (int i = 0; i < signalLength - lag; i++)
-            {
-                sum += signal[i] * signal[i + lag];
-            }
-            autocorr[lag] = sum;
-        }
-
-        // Ignore lag 0, find first significant peak after it
-        int maxIndex = 1; // Start from 1 to avoid the lag 0 peak
-        float maxValue = autocorr[1];
-
-        for (int i = 2; i < signalLength; i++)
-        {
-            if (autocorr[i] > maxValue)
-            {
-                maxValue = autocorr[i];
-                maxIndex = i;
-            }
-        }
-
-        // Convert the index of the peak to frequency
-        float sampleRate = AudioSettings.outputSampleRate;
-        float freq = sampleRate / maxIndex; // maxIndex corresponds to the period
-
-        return freq;
+        return HPS(spectrum);
     }
 
     void GetSpectrumAudioSource()
     {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+        audioSource.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
 
-        float cutoffFrequency = 1000f; // Set the cutoff frequency
-        float cutoffFrequency2 = 70f; // Set the cutoff frequency
+        float cutoffFrequency = 10000f; // Set the cutoff frequency
+        float cutoffFrequency2 = 60f; // Set the cutoff frequency
 
         for (int i = 0; i < samples.Length; i++)
         {
@@ -162,6 +119,19 @@ public class SoundControll : MonoBehaviour
             {
                 samples[i] = 0f; // Zero out values above the cutoff frequency
             }
+        }
+
+        float maxSpectrum = samples.Max();
+        float minSpectrum = samples.Min();
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            float holder = (samples[i] - minSpectrum) / (maxSpectrum - minSpectrum);
+            if (holder < 0f)
+            {
+                samples[i] = 0f;
+            }
+            else { samples[i] = holder; }
         }
     }
 
@@ -174,7 +144,7 @@ public class SoundControll : MonoBehaviour
             {
                 selectedDevice = Microphone.devices[0].ToString();
                 audioSource.outputAudioMixerGroup = mixerGroupMicrophone;
-                audioSource.clip = Microphone.Start(selectedDevice, true, 100, AudioSettings.outputSampleRate);
+                audioSource.clip = Microphone.Start(selectedDevice, true, 1000, AudioSettings.outputSampleRate);
             }
             else
             {
@@ -200,27 +170,44 @@ public class SoundControll : MonoBehaviour
             hps[i] = spectrum[i];
         }
 
-        for (int h = 1; h <= harmonics; h++)
+        for (int h = 2; h <= harmonics; h++)
         {
-            for (int i = 0; i < length / h; i++)
+            for (int i = 0; i < (length / h); i++)
             {
-                hps[i] += spectrum[i * h];
+                hps[i] *= Math.Abs(spectrum[i * h]);
             }
+            
         }
 
-        float maxVal = 0f;
-        int maxIndex = 0;
+        float maxVal = hps.Max();
+        int maxIndex = Array.IndexOf(hps, maxVal);
 
-        for (int i = 0; i < length; i++)
-        {
-            if (hps[i] > maxVal)
-            {
-                maxVal = hps[i];
-                maxIndex = i;
-            }
-        }
+        float specMaxVal = spectrum.Max();
+        Debug.Log("Detected max-value hps: " + maxVal);
+        Debug.Log("Detected max-value in spectrum: " + specMaxVal);
+        Debug.Log("Spectrum test");
+        Debug.Log("Detected hps maxIndex in spectrum: " + spectrum[maxIndex]);
+        Debug.Log("Detected hps maxIndex*2 in spectrum: " + spectrum[maxIndex*2]);
+        Debug.Log("Detected hps maxIndex*3 in spectrum: " + spectrum[maxIndex*3]);
+        float spectrumMax = (spectrum[maxIndex] * spectrum[maxIndex * 2] * spectrum[maxIndex * 3]);
+        Debug.Log("Calculated max-value in spectrum from hps maxIndex(1,2,3): " + spectrumMax);
+
+        //float maxVal1 = 0f;
+        //int maxIndex1 = 0;
+
+        //for (int i = 0; i < length; i++)
+        //{
+        //    if (hps[i] > maxVal1)
+        //    {
+        //        maxVal1 = hps[i];
+        //        maxIndex1 = i;
+        //    }
+        //}
 
         float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
+
+        Debug.Log("Detected maxIndex: " + maxIndex);
+        Debug.Log("Detected frequency: " + freq + " Hz");
 
         return freq;
     }
