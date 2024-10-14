@@ -109,7 +109,7 @@ public class SoundControll : MonoBehaviour
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
 
-        float cutoffFrequency = 10000f; // Set the cutoff frequency
+        float cutoffFrequency = 16000f; // Set the cutoff frequency
         float cutoffFrequency2 = 60f; // Set the cutoff frequency
 
         for (int i = 0; i < samples.Length; i++)
@@ -179,33 +179,34 @@ public class SoundControll : MonoBehaviour
             
         }
 
-        float maxVal = hps.Max();
-        int maxIndex = Array.IndexOf(hps, maxVal);
+        //float maxVal = hps.Max();
+        //int maxIndex = Array.IndexOf(hps, maxVal);
 
-        float specMaxVal = spectrum.Max();
-        Debug.Log("Detected max-value hps: " + maxVal);
-        Debug.Log("Detected max-value in spectrum: " + specMaxVal);
-        Debug.Log("Spectrum test");
-        Debug.Log("Detected hps maxIndex in spectrum: " + spectrum[maxIndex]);
-        Debug.Log("Detected hps maxIndex*2 in spectrum: " + spectrum[maxIndex*2]);
-        Debug.Log("Detected hps maxIndex*3 in spectrum: " + spectrum[maxIndex*3]);
-        float spectrumMax = (spectrum[maxIndex] * spectrum[maxIndex * 2] * spectrum[maxIndex * 3]);
-        Debug.Log("Calculated max-value in spectrum from hps maxIndex(1,2,3): " + spectrumMax);
+        //float specMaxVal = spectrum.Max();
+        //Debug.Log("Detected max-value hps: " + maxVal);
+        //Debug.Log("Detected max-value in spectrum: " + specMaxVal);
+        //Debug.Log("Spectrum test");
+        //Debug.Log("Detected hps maxIndex in spectrum: " + spectrum[maxIndex]);
+        //Debug.Log("Detected hps maxIndex*2 in spectrum: " + spectrum[maxIndex*2]);
+        //Debug.Log("Detected hps maxIndex*3 in spectrum: " + spectrum[maxIndex*3]);
+        //float spectrumMax = (spectrum[maxIndex] * spectrum[maxIndex * 2] * spectrum[maxIndex * 3]);
+        //Debug.Log("Calculated max-value in spectrum from hps maxIndex(1,2,3): " + spectrumMax);
 
-        //float maxVal1 = 0f;
-        //int maxIndex1 = 0;
+        float maxVal = 0f;
+        int maxIndex = 0;
 
-        //for (int i = 0; i < length; i++)
-        //{
-        //    if (hps[i] > maxVal1)
-        //    {
-        //        maxVal1 = hps[i];
-        //        maxIndex1 = i;
-        //    }
-        //}
+        for (int i = 0; i < length/harmonics; i++)
+        {
+            if (hps[i] > maxVal)
+            {
+                maxVal = hps[i];
+                maxIndex = i;
+            }
+        }
 
         float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
 
+        Debug.Log("Detected max-value hps: " + maxVal);
         Debug.Log("Detected maxIndex: " + maxIndex);
         Debug.Log("Detected frequency: " + freq + " Hz");
 
