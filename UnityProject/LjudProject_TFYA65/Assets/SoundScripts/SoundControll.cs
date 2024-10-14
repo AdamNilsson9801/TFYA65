@@ -74,6 +74,10 @@ public class SoundControll : MonoBehaviour
                 for (int i = 0; i < sampleBuffer.Length; i++)
                 {
                     sampleBuffer[i] /= (float)frameAmount;
+<<<<<<< Updated upstream
+=======
+                    //Debug.Log(sampleBuffer[i] + " sampleBuffer");
+>>>>>>> Stashed changes
                 }
 
                 float detectedpitch = DetectPitch(sampleBuffer);
@@ -152,8 +156,13 @@ public class SoundControll : MonoBehaviour
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
 
+<<<<<<< Updated upstream
         float cutoffFrequency = 1000f; // Set the cutoff frequency
         float cutoffFrequency2 = 70f; // Set the cutoff frequency
+=======
+        float cutoffFrequency = 16000f; // Set the cutoff frequency
+        float cutoffFrequency2 = 60f; // Set the cutoff frequency
+>>>>>>> Stashed changes
 
         for (int i = 0; i < samples.Length; i++)
         {
@@ -208,10 +217,30 @@ public class SoundControll : MonoBehaviour
             }
         }
 
+<<<<<<< Updated upstream
         float maxVal = 0f;
         int maxIndex = 0;
 
         for (int i = 0; i < length; i++)
+=======
+        //float maxVal = hps.Max();
+        //int maxIndex = Array.IndexOf(hps, maxVal);
+
+        //float specMaxVal = spectrum.Max();
+        //Debug.Log("Detected max-value hps: " + maxVal);
+        //Debug.Log("Detected max-value in spectrum: " + specMaxVal);
+        //Debug.Log("Spectrum test");
+        //Debug.Log("Detected hps maxIndex in spectrum: " + spectrum[maxIndex]);
+        //Debug.Log("Detected hps maxIndex*2 in spectrum: " + spectrum[maxIndex*2]);
+        //Debug.Log("Detected hps maxIndex*3 in spectrum: " + spectrum[maxIndex*3]);
+        //float spectrumMax = (spectrum[maxIndex] * spectrum[maxIndex * 2] * spectrum[maxIndex * 3]);
+        //Debug.Log("Calculated max-value in spectrum from hps maxIndex(1,2,3): " + spectrumMax);
+
+        float maxVal = 0f;
+        int maxIndex = 0;
+
+        for (int i = 0; i < length/harmonics; i++)
+>>>>>>> Stashed changes
         {
             if (hps[i] > maxVal)
             {
@@ -222,6 +251,13 @@ public class SoundControll : MonoBehaviour
 
         float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
 
+<<<<<<< Updated upstream
+=======
+        Debug.Log("Detected max-value hps: " + maxVal);
+        Debug.Log("Detected maxIndex: " + maxIndex);
+        Debug.Log("Detected frequency: " + freq + " Hz");
+
+>>>>>>> Stashed changes
         return freq;
     }
 
