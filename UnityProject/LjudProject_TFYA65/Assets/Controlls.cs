@@ -1,29 +1,90 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Controlls : MonoBehaviour
 {
+    public SoundControll soundControllScript;
+    public TextMeshProUGUI text;
     public GameObject terrain;
     public GameObject lanePositions;
-    public float carSpeed = 10f;
+    public float carSpeed = 100f;
     public GameObject GameManager;
-    public float deadSpaceScale = 5f;
+    public float deadSpaceScale = 2f;
 
     private Vector3 targetPos;
     private bool isMoving = false;
     private int lanePos = 1;
+    private float checkTime = 0;
+    private float[] pitchArray;
+    private int pitchArrayLength = 5;
+    private int pitchArrayIndex = 0;
 
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position = lanePositions.transform.GetChild(1).position;
+        pitchArray = new float[pitchArrayLength];
     }
 
     // Update is called once per frame
     void Update()
+    {
+
+        float currentTime = Time.time;
+
+
+        if (soundControllScript && (currentTime - checkTime) >= 0.3f)
+        {
+            float pitch = soundControllScript.GetPitch();
+
+
+            if (pitch > 69f && pitch < 1000f)
+            {
+                if (pitchArrayIndex < pitchArrayLength)
+                {
+                    pitchArray[pitchArrayIndex] = pitch;
+                    pitchArrayIndex++;
+                }
+                else
+                {
+                    float newPitch = pitchArray.Max();
+
+                    text.text = Mathf.Round(newPitch).ToString() + " Hz";
+                    ChangeLane(newPitch);
+                    checkTime = currentTime;
+                    pitchArrayIndex = 0;
+                }
+
+
+
+            }
+            else
+            {
+                pitchArrayIndex = 0;
+            }
+
+        }
+
+        if (isMoving)
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPos, carSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, targetPos) < 0.1f)
+            {
+                isMoving = false;
+            }
+        }
+
+        //Move car with keys (<-- A, D -->)
+        //MoveCarWithKeys()
+    }
+
+    private void MoveCarWithKeys()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -48,16 +109,6 @@ public class Controlls : MonoBehaviour
             }
 
         }
-
-        if (isMoving)
-        {
-            transform.position = Vector3.Lerp(transform.position, targetPos, carSpeed * Time.deltaTime);
-
-            if (Vector3.Distance(transform.position, targetPos) < 0.1f)
-            {
-                isMoving = false;
-            }
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,7 +116,7 @@ public class Controlls : MonoBehaviour
         if (other.gameObject.CompareTag("GroundSectionTrigger"))
         {
             int GroundIndex = terrain.GetComponent<InfiniteTerrain>().GetIndexOfGround(other.transform.parent.gameObject);
-           
+
             terrain.GetComponent<InfiniteTerrain>().MoveGroundSection(GroundIndex);
 
         }
@@ -106,33 +157,33 @@ public class Controlls : MonoBehaviour
 
     public void ChangeLane(float freq)
     {
-            float dist = Mathf.Abs(GlobalSpeed.rightPitch - GlobalSpeed.leftPitch);
-            
-            float lowBar = GlobalSpeed.leftPitch + (dist / 2f) - deadSpaceScale;
-            
-            float highBar = GlobalSpeed.rightPitch - (dist / 2f) + deadSpaceScale;
+        float dist = Mathf.Abs(GlobalSpeed.rightPitch - GlobalSpeed.leftPitch);
 
-        if(freq < lowBar) //Turn left
+        float lowBar = GlobalSpeed.leftPitch + (dist / 2f) - deadSpaceScale;
+
+        float highBar = GlobalSpeed.rightPitch - (dist / 2f) + deadSpaceScale;
+
+        if (freq < lowBar) //Turn left
         {
 
             int currentLane = lanePos;
 
             if (isMovePossible(currentLane, currentLane - 1))
             {
-                targetPos = lanePositions.transform.GetChild(currentLane - 1).position;
                 isMoving = true;
+                targetPos = lanePositions.transform.GetChild(currentLane - 1).position;
                 lanePos = currentLane - 1;
             }
 
         }
-        else if(freq > highBar)//Turn right
+        else if (freq > highBar)//Turn right
         {
             int currentLane = lanePos;
 
             if (isMovePossible(currentLane, currentLane + 1))
             {
-                targetPos = lanePositions.transform.GetChild(currentLane + 1).position;
                 isMoving = true;
+                targetPos = lanePositions.transform.GetChild(currentLane + 1).position;
                 lanePos = currentLane + 1;
             }
 

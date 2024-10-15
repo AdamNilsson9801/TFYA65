@@ -3,6 +3,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))]
 public class SoundControll : MonoBehaviour
@@ -11,6 +12,7 @@ public class SoundControll : MonoBehaviour
     AudioSource audioSource;
     public TextMeshProUGUI text;
 
+    public int sampleLength = 4096;
     public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
     //public static float[] freqBand = new float[8];
@@ -27,142 +29,53 @@ public class SoundControll : MonoBehaviour
     public bool useHPS = true;
 
     //Harmonic Product Spectrum (HPS)
-    public int harmonics = 5;
+    public int harmonics = 3;
 
-
-    private float[] sampleBuffer = new float[4096];
-    private int frameCounter = 0;
-    private int frameAmount = 20;
-    //private bool isMoving = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        //Get audioSource
-        audioSource = GetComponent<AudioSource>();
-
+   
         //Get microphone
         SetAudioClip();
 
         audioSource.Play();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // vi måste nollställa framecounter om getloudness blir lägre än loudnessThreshold
-        //Detect pitch
-        if (GetLoudness() > loudnessThreshold)
-        {
-            if (frameCounter < frameAmount) //Do this 15 frames
-            {
-                GetSpectrumAudioSource();
-
-                for (int i = 0; i < samples.Length; i++) //Store values in buffer
-                {
-                    sampleBuffer[i] += samples[i];
-                }
-
-                frameCounter++;
-                Array.Clear(samples, 0, samples.Length); //Clear samples array
-            }
-
-
-            if (frameCounter == frameAmount)
-            {
-                //Mean spectrum over 15 frames
-                for (int i = 0; i < sampleBuffer.Length; i++)
-                {
-                    sampleBuffer[i] /= (float)frameAmount;
-                }
-
-                float detectedpitch = DetectPitch(sampleBuffer);
-
-                if (text)
-                {
-                    text.text = Mathf.Round(detectedpitch).ToString() + "Hz";
-                }
-                frameCounter = 0;
-                Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
-
-                if (car)
-                {
-                    car.GetComponent<Controlls>().ChangeLane(detectedpitch);
-                }
-            }
-        }
-        else
-        {
-
-            frameCounter = 0;
-            Array.Clear(sampleBuffer, 0, sampleBuffer.Length);
-        }
-    }
-
-    private float DetectPitch(float[] spectrum)
+    float DetectPitch()
     {
         if (useHPS)
         {
-            return HPS(spectrum);
+            return HPS();
         }
         else
         {
-            return AutoCorrelation(spectrum);
+            return 0f;
         }
 
     }
 
-    private float AutoCorrelation(float[] signal)
+
+
+    private float[] GetSpectrumAudioSource()
     {
-        int signalLength = signal.Length;
-        float[] autocorr = new float[signalLength];
+        float[] spectrum = new float[sampleLength];
 
-        // Compute autocorrelation for each lag
-        for (int lag = 0; lag < signalLength; lag++)
-        {
-            float sum = 0f;
-            for (int i = 0; i < signalLength - lag; i++)
-            {
-                sum += signal[i] * signal[i + lag];
-            }
-            autocorr[lag] = sum;
-        }
+        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Blackman);
 
-        // Ignore lag 0, find first significant peak after it
-        int maxIndex = 1; // Start from 1 to avoid the lag 0 peak
-        float maxValue = autocorr[1];
-
-        for (int i = 2; i < signalLength; i++)
-        {
-            if (autocorr[i] > maxValue)
-            {
-                maxValue = autocorr[i];
-                maxIndex = i;
-            }
-        }
-
-        // Convert the index of the peak to frequency
-        float sampleRate = AudioSettings.outputSampleRate;
-        float freq = sampleRate / maxIndex; // maxIndex corresponds to the period
-
-        return freq;
-    }
-
-    void GetSpectrumAudioSource()
-    {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
-
-        float cutoffFrequency = 1000f; // Set the cutoff frequency
+        float cutoffFrequency = 10000f; // Set the cutoff frequency
         float cutoffFrequency2 = 70f; // Set the cutoff frequency
 
-        for (int i = 0; i < samples.Length; i++)
+        for (int i = 0; i < spectrum.Length; i++)
         {
-            float frequency = i * AudioSettings.outputSampleRate / (2f * samples.Length);
+            float frequency = i * AudioSettings.outputSampleRate / (2f * spectrum.Length);
             if (frequency > cutoffFrequency || frequency < cutoffFrequency2)
             {
-                samples[i] = 0f; // Zero out values above the cutoff frequency
+                spectrum[i] = 0f; // Zero out values above the cutoff frequency
             }
         }
+
+        return spectrum;
     }
 
 
@@ -172,12 +85,20 @@ public class SoundControll : MonoBehaviour
         {
             if (Microphone.devices.Length > 0)
             {
-                selectedDevice = Microphone.devices[0].ToString();
+                //Get audioSource
+                audioSource = GetComponent<AudioSource>();
+
+                selectedDevice = Microphone.devices[0];
                 audioSource.outputAudioMixerGroup = mixerGroupMicrophone;
                 audioSource.clip = Microphone.Start(selectedDevice, true, 100, AudioSettings.outputSampleRate);
+
+                while (!(Microphone.GetPosition(selectedDevice) > 0)) { }
+
+                audioSource.loop = true;
             }
             else
             {
+                Debug.Log("Error! Microphone not found.");
                 useMicrophone = false;
             }
         }
@@ -190,28 +111,31 @@ public class SoundControll : MonoBehaviour
         }
     }
 
-    float HPS(float[] spectrum)
+    float HPS()
     {
-        int length = spectrum.Length;
-        float[] hps = new float[length];
 
-        for (int i = 0; i < length; i++)
+        float[] spectrum = GetSpectrumAudioSource();
+
+        int spectrumLength = spectrum.Length;
+        float[] hps = new float[spectrumLength];
+
+        for (int i = 0; i < spectrumLength; i++)
         {
             hps[i] = spectrum[i];
         }
 
-        for (int h = 1; h <= harmonics; h++)
+        for (int h = 2; h <= harmonics; h++)
         {
-            for (int i = 0; i < length / h; i++)
+            for (int i = 0; i < spectrumLength / h; i++)
             {
-                hps[i] += spectrum[i * h];
+                hps[i] *= spectrum[i * h];
             }
         }
 
         float maxVal = 0f;
         int maxIndex = 0;
 
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < spectrumLength / harmonics; i++)
         {
             if (hps[i] > maxVal)
             {
@@ -221,18 +145,18 @@ public class SoundControll : MonoBehaviour
         }
 
         float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
-
+        //Debug.Log("Freq: " + freq);
         return freq;
     }
 
 
-    float GetLoudness()
+    public float GetLoudness()
     {
         int startPos = Microphone.GetPosition(Microphone.devices[0]) - sampleWindow;
 
-        if (startPos < 0) startPos = 0;
+        if (startPos < 0) return 0f;
 
-
+        float[] samplesTimeDomain = new float[sampleWindow];
         audioSource.clip.GetData(samplesTimeDomain, startPos);
 
         float totalLoudness = 0;
@@ -241,12 +165,16 @@ public class SoundControll : MonoBehaviour
             totalLoudness += Mathf.Abs(samplesTimeDomain[i]);
         }
 
-        return Mathf.Round((totalLoudness / sampleWindow) * 1000);
+        return (totalLoudness / sampleWindow) * 1000f;
     }
 
     public float GetPitch()
     {
-        GetSpectrumAudioSource();
-        return DetectPitch(samples);
+        if (GetLoudness() > loudnessThreshold)
+        {
+            return DetectPitch();
+        }
+
+        return 0f;
     }
 }

@@ -167,6 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   car: {fileID: 759774738}
   text: {fileID: 1345337669}
+  sampleLength: 4096
   totalRange:
   - 0
   - 0
@@ -9175,6 +9176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3becfe08999355b4da1deb5b1c3bf9ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundControllScript: {fileID: 39604363}
+  text: {fileID: 1345337669}
   terrain: {fileID: 187185327}
   lanePositions: {fileID: 2032903364}
   carSpeed: 10
