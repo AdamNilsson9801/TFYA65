@@ -1,4 +1,9 @@
 using System;
+<<<<<<< Updated upstream
+=======
+using System.Linq;
+using TMPro;
+>>>>>>> Stashed changes
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -26,7 +31,10 @@ public class SoundControll : MonoBehaviour
 
     //Harmonic Product Spectrum (HPS)
     public int harmonics = 4;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
     private float[] sampleBuffer = new float[2048];
     private int frameCounter = 0;
@@ -100,11 +108,22 @@ public class SoundControll : MonoBehaviour
 
     }
 
+<<<<<<< Updated upstream
     void GetSpectrumAudioSource()
+=======
+
+    private float[] GetSpectrumAudioSource()
+>>>>>>> Stashed changes
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
 
+<<<<<<< Updated upstream
         float cutoffFrequency = 5000f; // Set the cutoff frequency
+=======
+        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
+
+        float cutoffFrequency = 17000f; // Set the cutoff frequency
+>>>>>>> Stashed changes
         float cutoffFrequency2 = 70f; // Set the cutoff frequency
 
         for (int i = 0; i < samples.Length; i++)
@@ -115,8 +134,23 @@ public class SoundControll : MonoBehaviour
                 samples[i] = 0f; // Zero out values above the cutoff frequency
             }
         }
+<<<<<<< Updated upstream
     }
 
+=======
+
+        float max = spectrum.Max();
+        float min = spectrum.Min();
+
+        for (int i = 0; i < spectrum.Length; i++)
+        {
+            spectrum[i] = ((spectrum[i] - min)/(max - min));
+        }
+
+            return spectrum;
+    }
+
+>>>>>>> Stashed changes
     void SetAudioClip()
     {
         if (useMicrophone)
@@ -155,7 +189,7 @@ public class SoundControll : MonoBehaviour
         {
             for (int i = 0; i < (length / h); i++)
             {
-                hps[i] *= spectrum[i * h];
+                hps[i] *= Mathf.Pow(spectrum[i * h], 1f/h);
             }
         }
 

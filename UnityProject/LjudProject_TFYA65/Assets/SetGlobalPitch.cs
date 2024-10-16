@@ -11,17 +11,6 @@ public class SetGloballeftPitch : MonoBehaviour
     public string selectedDevice;
     public AudioMixerGroup mixerGroupMicrophone;
 
-    public float[] samples = new float[512]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
-
-    private int harmonics = 5;
-
-    private void Start()
-    {
-        //audioSource = GetComponent<AudioSource>();
-        //audioSource.Play();
-    }
-
-
     public void SetPitch()
     {
 

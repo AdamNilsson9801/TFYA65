@@ -8365,7 +8365,7 @@ MonoBehaviour:
   mixerGroupMicrophone: {fileID: -6023011375341617437, guid: 08216f56bcd64064e988d2b886f69fa9,
     type: 2}
   mixerGroupMaster: {fileID: 24300002, guid: 08216f56bcd64064e988d2b886f69fa9, type: 2}
-  loudnessThreshold: 3.9
+  loudnessThreshold: 10
   sampleWindow: 64
   useHPS: 1
   harmonics: 5
