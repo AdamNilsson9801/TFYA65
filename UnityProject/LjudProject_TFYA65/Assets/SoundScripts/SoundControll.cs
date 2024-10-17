@@ -12,8 +12,8 @@ public class SoundControll : MonoBehaviour
     AudioSource audioSource;
     public TextMeshProUGUI text;
 
-    public int sampleLength = 4096;
-    public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public int sampleLength = 8192;
+    public static float[] samples = new float[8192]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
     //public static float[] freqBand = new float[8];
     public float[] totalRange = new float[8192];//8192 max size
@@ -29,13 +29,12 @@ public class SoundControll : MonoBehaviour
     public bool useHPS = true;
 
     //Harmonic Product Spectrum (HPS)
-    public int harmonics = 3;
+    public int harmonics = 5;
 
 
     // Start is called before the first frame update
     void Start()
     {
-   
         //Get microphone
         SetAudioClip();
 
@@ -52,19 +51,17 @@ public class SoundControll : MonoBehaviour
         {
             return 0f;
         }
-
     }
-
 
 
     private float[] GetSpectrumAudioSource()
     {
         float[] spectrum = new float[sampleLength];
 
-        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Blackman);
+        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
 
         float cutoffFrequency = 10000f; // Set the cutoff frequency
-        float cutoffFrequency2 = 70f; // Set the cutoff frequency
+        float cutoffFrequency2 = 100f; // Set the cutoff frequency
 
         for (int i = 0; i < spectrum.Length; i++)
         {
@@ -128,7 +125,7 @@ public class SoundControll : MonoBehaviour
         {
             for (int i = 0; i < spectrumLength / h; i++)
             {
-                hps[i] *= spectrum[i * h];
+                hps[i] *= Mathf.Pow(spectrum[i * h], 1.0f/(float)h);
             }
         }
 

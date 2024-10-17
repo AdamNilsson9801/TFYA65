@@ -18,17 +18,14 @@ public class Controlls : MonoBehaviour
     private Vector3 targetPos;
     private bool isMoving = false;
     private int lanePos = 1;
-    private float checkTime = 0;
-    private float[] pitchArray;
-    private int pitchArrayLength = 5;
-    private int pitchArrayIndex = 0;
+    private float currentPitch = 0;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position = lanePositions.transform.GetChild(1).position;
-        pitchArray = new float[pitchArrayLength];
     }
 
     // Update is called once per frame
@@ -37,35 +34,28 @@ public class Controlls : MonoBehaviour
 
         float currentTime = Time.time;
 
-
-        if (soundControllScript && (currentTime - checkTime) >= 0.3f)
+        if (soundControllScript)
         {
-            float pitch = soundControllScript.GetPitch();
-
-
-            if (pitch > 69f && pitch < 1000f)
+            if (soundControllScript.GetLoudness() > soundControllScript.loudnessThreshold)
             {
-                if (pitchArrayIndex < pitchArrayLength)
+
+                float pitch = soundControllScript.GetPitch();
+
+
+                if (pitch > 69f && pitch < 1000f)
                 {
-                    pitchArray[pitchArrayIndex] = pitch;
-                    pitchArrayIndex++;
+                    currentPitch = pitch;
                 }
-                else
-                {
-                    float newPitch = pitchArray.Max();
-
-                    text.text = Mathf.Round(newPitch).ToString() + " Hz";
-                    ChangeLane(newPitch);
-                    checkTime = currentTime;
-                    pitchArrayIndex = 0;
-                }
-
-
-
             }
             else
             {
-                pitchArrayIndex = 0;
+                if (currentPitch > 1f)
+                {
+                    text.text = Mathf.Round(currentPitch).ToString() + " Hz";
+                    ChangeLane(currentPitch);
+                    currentPitch = 0f;
+                }
+
             }
 
         }
@@ -81,7 +71,7 @@ public class Controlls : MonoBehaviour
         }
 
         //Move car with keys (<-- A, D -->)
-        //MoveCarWithKeys()
+        MoveCarWithKeys();
     }
 
     private void MoveCarWithKeys()

@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 public class InfiniteTerrain : MonoBehaviour
 {
@@ -24,19 +22,12 @@ public class InfiniteTerrain : MonoBehaviour
             //Create instance of the ground section and set start position
             GameObject groundInstance = Instantiate(ground, new Vector3(i * xLength, 0, 0), Quaternion.Euler(-90, 0, 0));
 
-            //Set velocity
-            //groundInstance.GetComponent<Rigidbody>().velocity = Vector3.right * -groundSpeed;
-
             //Add to list
             groundList.Add(groundInstance);
         }
 
     }
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
 
     public int GetIndexOfGround(GameObject obj)
     {

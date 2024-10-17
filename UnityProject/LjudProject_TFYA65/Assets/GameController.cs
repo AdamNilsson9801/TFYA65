@@ -5,10 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    private void Start()
-    {
-
-    }
     public void StartGame()
     {
         SceneManager.LoadScene("Game");
@@ -18,5 +14,10 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         SceneManager.LoadScene("Menu");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
