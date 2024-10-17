@@ -26,7 +26,7 @@ public class SpawnObstaclesInRow : MonoBehaviour
             //Pick a random obstacles from the List
             int randomInt = Random.Range(0, obstacleList.Count);
 
-            //obstacles.Add(Instantiate(obstacleList[randomInt], spawnPos, Quaternion.Euler(0, -90, 0)));
+            obstacles.Add(Instantiate(obstacleList[randomInt], spawnPos, Quaternion.Euler(0, -90, 0)));
 
         }
         else
@@ -39,8 +39,8 @@ public class SpawnObstaclesInRow : MonoBehaviour
             int randomInt1 = Random.Range(0, obstacleList.Count);
             int randomInt2 = Random.Range(0, obstacleList.Count);
 
-            //obstacles.Add(Instantiate(obstacleList[randomInt1], spawnPos1, Quaternion.Euler(0, -90, 0)));
-            //obstacles.Add(Instantiate(obstacleList[randomInt2], spawnPos2, Quaternion.Euler(0, -90, 0)));
+            obstacles.Add(Instantiate(obstacleList[randomInt1], spawnPos1, Quaternion.Euler(0, -90, 0)));
+            obstacles.Add(Instantiate(obstacleList[randomInt2], spawnPos2, Quaternion.Euler(0, -90, 0)));
 
         }
     }

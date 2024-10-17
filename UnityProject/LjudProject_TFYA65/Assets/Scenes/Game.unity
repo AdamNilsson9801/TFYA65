@@ -8497,7 +8497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ground: {fileID: 8429094823511211749, guid: f5ca47f4a7e8fbe4089eb5e05f77b6e3, type: 3}
-  groundSectionAmount: 4
+  groundSectionAmount: 7
   groundSpeed: 10
   xLength: 0
 --- !u!4 &187185329
