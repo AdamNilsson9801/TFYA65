@@ -79,7 +79,7 @@ public class Controlls : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             int currentLane = lanePos;
-            Debug.Log("currentLane: " + currentLane);
+
             if (isMovePossible(currentLane, currentLane - 1))
             {
                 targetPos = lanePositions.transform.GetChild(currentLane - 1).position;

@@ -11,7 +11,6 @@ public class SpawnObstaclesInRow : MonoBehaviour
     public void Start()
     {
         obstacles = new List<GameObject>();
-        Debug.Log(obstacleList.Count);
     }
     public void SpawnInRow()
     {

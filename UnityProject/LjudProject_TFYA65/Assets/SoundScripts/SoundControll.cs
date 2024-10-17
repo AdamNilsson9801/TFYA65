@@ -12,11 +12,11 @@ public class SoundControll : MonoBehaviour
     AudioSource audioSource;
     public TextMeshProUGUI text;
 
-    public int sampleLength = 8192;
-    public static float[] samples = new float[8192]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
+    public int sampleLength = 4096;
+    public static float[] samples = new float[4096]; // samplar om 20Hz - 20kHz till samples mellan [0,1024]
     public static float[] samplesTimeDomain = new float[64];
     //public static float[] freqBand = new float[8];
-    public float[] totalRange = new float[8192];//8192 max size
+    public float[] totalRange = new float[4096];//8192 max size
 
     public AudioClip audioClip;
     public bool useMicrophone;
@@ -141,7 +141,7 @@ public class SoundControll : MonoBehaviour
             }
         }
 
-        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * samples.Length);
+        float freq = maxIndex * AudioSettings.outputSampleRate / (2f * spectrumLength);
         //Debug.Log("Freq: " + freq);
         return freq;
     }
